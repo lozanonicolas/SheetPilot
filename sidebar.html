@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <base target="_top">
-    </head>
+  <head>
+    <base target="_top">
+  </head>
 
-    <body>
-        <h1>SheetPilot</h1>
-        <p>Your Sheets™ productivity toolkit.</p>
-    </body>
+  <body>
+    <h1>SheetPilot</h1>
+    <p>Your Sheets™ productivity toolkit.</p>
+
+    <button onclick="analyzeSheet()">Analyze Sheet</button>
+
+    <script>
+      function analyzeSheet() {
+        google.script.run
+          .withSuccessHandler(showSheetName)
+          .getActiveSheetName();
+      }
+
+      function showSheetName(name) {
+        const message = document.createElement('p');
+        message.textContent = `Current sheet: ${name}`;
+
+        document.body.appendChild(message);
+      }
+    </script>
+  </body>
 </html>

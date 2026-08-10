@@ -12,3 +12,8 @@ function showSidebar() {
 
   SpreadsheetApp.getUi().showSidebar(html);
 }
+
+function getActiveSheetName() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  return sheet.getName();
+}
