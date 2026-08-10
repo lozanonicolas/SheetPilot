@@ -13,16 +13,15 @@ function showSidebar() {
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
-function getActiveSheetName() {
+function getActiveSheetValues() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  return sheet.getName();
+  return {
+    name: sheet.getName(),
+    values: sheet.getDataRange().getValues()
+  };
 }
 
-function analyzeActiveSheet() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const range = sheet.getDataRange();
-  const values = range.getValues();
-
+function analyzeSheetData(values) {
   let emptyRows = 0;
   let emptyColumns = 0;
 
@@ -48,11 +47,21 @@ function analyzeActiveSheet() {
       emptyColumns++;
     }
   }
+
   return {
-    name: sheet.getName(),
     rows: values.length - 1,
     columns: values[0].length,
     emptyRows: emptyRows,
     emptyColumns: emptyColumns
+  };
+}
+
+function analyzeActiveSheet() {
+  const sheetData = getActiveSheetValues();
+  const analysis = analyzeSheetData(sheetData.values);
+
+  return {
+    name: sheetData.name,
+    ...analysis
   };
 }
