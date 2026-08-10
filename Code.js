@@ -23,9 +23,36 @@ function analyzeActiveSheet() {
   const range = sheet.getDataRange();
   const values = range.getValues();
 
+  let emptyRows = 0;
+  let emptyColumns = 0;
+
+  //Check for empty rows
+  for (const row of values) {
+    if (row.every(cell => cell === '')) {
+      emptyRows++;
+    }
+  }
+
+  //Check for empty columns
+  for (let column = 0; column < values[0].length; column++) {
+    let isEmpty = true;
+
+    for (let row = 1; row < values.length; row++) {
+      if (values[row][column] !== '') {
+        isEmpty = false;
+        break;
+      }
+    }
+
+    if (isEmpty) {
+      emptyColumns++;
+    }
+  }
   return {
     name: sheet.getName(),
-    rows: values.length,
-    columns: values[0].length
+    rows: values.length - 1,
+    columns: values[0].length,
+    emptyRows: emptyRows,
+    emptyColumns: emptyColumns
   };
 }

@@ -2,13 +2,76 @@
 <html>
   <head>
     <base target="_top">
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 16px;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .results {
+        margin-top: 20px;
+      }
+
+      .stat {
+        margin-bottom: 12px;
+      }
+
+      .label {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .value {
+        font-size: 20px;
+        font-weight: bold;
+      }
+    </style>
   </head>
 
   <body>
     <h1>SheetPilot</h1>
+
     <p>Your Sheets™ productivity toolkit.</p>
 
     <button onclick="analyzeSheet()">Analyze Sheet</button>
+
+    <div class="results">
+      <div class="stat">
+        <div class="label">Current Sheet</div>
+        <div class="value" id="sheetName">-</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Rows</div>
+        <div class="value" id="rowCount">-</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Columns</div>
+        <div class="value" id="columnCount">-</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Empty Rows</div>
+        <div class="value" id="emptyRowCount">-</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Empty Columns</div>
+        <div class="value" id="emptyColumnCount">-</div>
+      </div>
+    </div>
 
     <script>
       function analyzeSheet() {
@@ -18,11 +81,11 @@
       }
 
       function showAnalysis(result) {
-        const message = document.createElement('p');
-
-        message.textContent = `Sheet: ${result.name} | Rows: ${result.rows} | Columns: ${result.columns}`;
-
-        document.body.appendChild(message);
+        document.getElementById('sheetName').textContent = result.name;
+        document.getElementById('rowCount').textContent = result.rows;
+        document.getElementById('columnCount').textContent = result.columns;
+        document.getElementById('emptyRowCount').textContent = result.emptyRows;
+        document.getElementById('emptyColumnCount').textContent = result.emptyColumns;
       }
     </script>
   </body>
