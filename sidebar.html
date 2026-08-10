@@ -71,6 +71,11 @@
         <div class="label">Empty Columns</div>
         <div class="value" id="emptyColumnCount">-</div>
       </div>
+      <div class="stat">
+        <div class="label">Duplicate Headers</div>
+        <div class="value" id="duplicateHeaderCount">-</div>
+        <div class="label" id="duplicateHeaderList"></div>
+      </div>
     </div>
 
     <script>
@@ -86,6 +91,13 @@
         document.getElementById('columnCount').textContent = result.columns;
         document.getElementById('emptyRowCount').textContent = result.emptyRows;
         document.getElementById('emptyColumnCount').textContent = result.emptyColumns;
+        document.getElementById('duplicateHeaderCount').textContent = result.duplicateHeaders.length;
+
+        // Only show the list of names if there's at least one duplicate
+        const listEl = document.getElementById('duplicateHeaderList');
+        listEl.textContent = result.duplicateHeaders.length > 0
+          ? result.duplicateHeaders.join(', ')
+          : '';
       }
     </script>
   </body>

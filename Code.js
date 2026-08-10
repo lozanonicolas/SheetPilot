@@ -48,11 +48,14 @@ function analyzeSheetData(values) {
     }
   }
 
+  const duplicateHeaders = findDuplicateHeaders(values);
+
   return {
     rows: values.length - 1,
     columns: values[0].length,
     emptyRows: emptyRows,
-    emptyColumns: emptyColumns
+    emptyColumns: emptyColumns,
+    duplicateHeaders: duplicateHeaders
   };
 }
 
@@ -64,4 +67,27 @@ function analyzeActiveSheet() {
     name: sheetData.name,
     ...analysis
   };
+}
+
+function findDuplicateHeaders(values) {
+  const headers = values[0];
+
+  // Normalize each header: trim whitespace + lowercase,
+  // so "Name", "name", and " Name " are all treated as the same header.
+  const normalized = headers.map(h => String(h).trim().toLowerCase());
+
+  const seen = {};
+  const duplicates = [];
+
+  normalized.forEach((header, index) => {
+    if (header === '') return; // empty headers are a separate check, not this one
+
+    if (seen[header] !== undefined) {
+      duplicates.push(headers[index]); // keep the original (non-normalized) text
+    } else {
+      seen[header] = index;
+    }
+  });
+
+  return duplicates;
 }
