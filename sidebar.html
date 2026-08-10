@@ -13,13 +13,14 @@
     <script>
       function analyzeSheet() {
         google.script.run
-          .withSuccessHandler(showSheetName)
-          .getActiveSheetName();
+          .withSuccessHandler(showAnalysis)
+          .analyzeActiveSheet();
       }
 
-      function showSheetName(name) {
+      function showAnalysis(result) {
         const message = document.createElement('p');
-        message.textContent = `Current sheet: ${name}`;
+
+        message.textContent = `Sheet: ${result.name} | Rows: ${result.rows} | Columns: ${result.columns}`;
 
         document.body.appendChild(message);
       }

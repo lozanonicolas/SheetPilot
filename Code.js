@@ -17,3 +17,15 @@ function getActiveSheetName() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   return sheet.getName();
 }
+
+function analyzeActiveSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const range = sheet.getDataRange();
+  const values = range.getValues();
+
+  return {
+    name: sheet.getName(),
+    rows: values.length,
+    columns: values[0].length
+  };
+}
