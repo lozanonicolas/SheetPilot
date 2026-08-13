@@ -157,13 +157,12 @@ function findDataTypeInconsistencies(values) {
   const columnCount = values[0].length;
 
   for (let column = 0; column < columnCount; column++) {
-    const typeCounts = {}; // e.g. { number: 4, text: 1 }
-    const cellTypes = []; // type of each data cell in this column, same order as rows
-    
+    const typeCounts = {};
+    const cellTypes = [];
+
     for (let row = 1; row < values.length; row++) {
       const cell = values[row][column];
 
-      // Skip empty cells
       if (String(cell).trim() === '') {
         cellTypes.push(null);
         continue;
@@ -176,22 +175,25 @@ function findDataTypeInconsistencies(values) {
 
     const dominantType = getDominantType(typeCounts);
 
-    if (dominantType === null) continue; // tie - skip this column
+    if (dominantType === null) continue;
 
     let inconsistentCount = 0;
 
     cellTypes.forEach((type, index) => {
       if (type !== null && type !== dominantType) {
-        cells.push({ row: index + 2, column: column + 1 });
+        cells.push({ row: index + 2, column: column + 1, type: type });
         inconsistentCount++;
       }
     });
 
-    // Only adds a summary entry if this column actually has a problem
     if (inconsistentCount > 0) {
+      const totalTypedCells = Object.values(typeCounts).reduce((sum, n) => sum + n, 0);
+      const dominantPercentage = Math.round((typeCounts[dominantType] / totalTypedCells) * 100);
+
       columnSummary.push({
         column: column + 1,
         dominantType: dominantType,
+        dominantPercentage: dominantPercentage, // new
         inconsistentCount: inconsistentCount
       });
     }
@@ -263,4 +265,14 @@ function highlightRows(rowPositions) {
   rowPositions.forEach(row => {
     sheet.getRange(row.row, 1, 1, lastColumn).setBackground('#FFFF00');
   });
+}
+
+function columnToLetter(col) {
+  let letter = '';
+  while (col > 0) {
+    const remainder = (col - 1) % 26;
+    letter = String.fromCharCode(65 + remainder) + letter;
+    col = Math.floor((col - 1) / 26);
+  }
+  return letter;
 }

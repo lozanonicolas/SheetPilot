@@ -123,6 +123,8 @@ function test_findDataTypeInconsistencies_detectsMinorityType() {
   assert(result.columnSummary.length === 1, 'expected 1 column in summary, got ' + result.columnSummary.length);
   assert(result.columnSummary[0].dominantType === 'number', 'expected dominant type number');
   assert(result.columnSummary[0].inconsistentCount === 1, 'expected inconsistentCount 1');
+  assert(result.cells[0].type === 'text', 'expected inconsistent cell type "text", got "' + result.cells[0].type + '"');
+  assert(result.columnSummary[0].dominantPercentage === 75, 'expected 75%, got ' + result.columnSummary[0].dominantPercentage);
   Logger.log('✅ test_findDataTypeInconsistencies_detectsMinorityType passed');
 }
 

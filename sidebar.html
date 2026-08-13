@@ -14,12 +14,11 @@
         --text-dim: #7c8698;
         --ok: #37d67a;
         --warn: #f5a623;
+        --bad: #f0554c;
         --info: #6c93ff;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
@@ -62,143 +61,6 @@
         margin: 0 0 18px 16px;
       }
 
-      .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      button {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 11px 14px;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        cursor: pointer;
-        transition: border-color 0.15s ease, background 0.15s ease;
-      }
-
-      button:focus-visible {
-        outline: 2px solid var(--info);
-        outline-offset: 2px;
-      }
-
-      .btn-primary {
-        background: var(--info);
-        color: #0c1017;
-        border-color: var(--info);
-      }
-
-      .btn-primary:hover {
-        background: #82a4ff;
-      }
-
-      .btn-secondary {
-        background: transparent;
-        color: var(--text);
-      }
-
-      .btn-secondary:hover {
-        border-color: var(--text-dim);
-      }
-
-      .sheet-name {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: var(--text-dim);
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .sheet-name span {
-        color: var(--text);
-      }
-
-      .panel {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .row:last-child {
-        border-bottom: none;
-      }
-
-      .row .indicator {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        background: var(--text-dim);
-      }
-
-      .row .indicator.ok {
-        background: var(--ok);
-        box-shadow: 0 0 5px var(--ok);
-      }
-
-      .row .indicator.warn {
-        background: var(--warn);
-        box-shadow: 0 0 5px var(--warn);
-      }
-
-      .row .indicator.info {
-        background: var(--info);
-      }
-
-      .row-main {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .row-label {
-        font-size: 12px;
-        color: var(--text-dim);
-      }
-
-      .row-detail {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        color: var(--text-dim);
-        margin-top: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .row-value {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 15px;
-        font-weight: 500;
-        flex-shrink: 0;
-      }
-
-      .section-gap {
-        height: 14px;
-      }
-
-      .empty-state {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: var(--text-dim);
-        text-align: center;
-        padding: 24px 12px;
-      }
-
       .tabs {
         display: flex;
         gap: 4px;
@@ -220,25 +82,53 @@
         border-radius: 0;
       }
 
-      .tab.active {
-        color: var(--text);
-        border-bottom-color: var(--info);
+      .tab.active { color: var(--text); border-bottom-color: var(--info); }
+      .tab:disabled { cursor: not-allowed; opacity: 0.4; }
+      .tab:disabled:hover { border-color: transparent; }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 18px;
       }
 
-      .tab:disabled {
-        cursor: not-allowed;
-        opacity: 0.4;
+      button {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 11px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
       }
 
-      .tab:disabled:hover {
-        border-color: transparent;
+      button:focus-visible { outline: 2px solid var(--info); outline-offset: 2px; }
+
+      .btn-primary { background: var(--info); color: #0c1017; border-color: var(--info); }
+      .btn-primary:hover { background: #82a4ff; }
+      .btn-secondary { background: transparent; color: var(--text); }
+      .btn-secondary:hover { border-color: var(--text-dim); }
+
+      .sheet-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+        padding-bottom: 12px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
       }
+
+      .sheet-name span { color: var(--text); }
 
       .gauge-wrap {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 10px 0 16px;
+        padding: 4px 0 18px;
       }
 
       .gauge-number {
@@ -255,6 +145,126 @@
         text-transform: uppercase;
         color: var(--text-dim);
         margin-top: 2px;
+      }
+
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin: 0 0 8px 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+
+      .indicator {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: var(--text-dim);
+      }
+
+      .indicator.ok { background: var(--ok); box-shadow: 0 0 5px var(--ok); }
+      .indicator.warn { background: var(--warn); box-shadow: 0 0 5px var(--warn); }
+      .indicator.info { background: var(--info); }
+
+      .card-label {
+        font-size: 11px;
+        color: var(--text-dim);
+        line-height: 1.2;
+      }
+
+      .card-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .card-value.na { color: var(--text-dim); font-size: 16px; }
+
+      .accordion {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        overflow: hidden;
+      }
+
+      .accordion summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+      }
+
+      .accordion summary::-webkit-details-marker { display: none; }
+
+      .accordion .row-main { flex: 1; min-width: 0; }
+      .accordion .row-label { font-size: 12px; color: var(--text-dim); }
+      .accordion .row-value { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 500; }
+      .accordion .row-value.na { color: var(--text-dim); font-size: 12px; }
+
+      .chevron {
+        font-size: 10px;
+        color: var(--text-dim);
+        transition: transform 0.15s ease;
+      }
+
+      .accordion[open] .chevron { transform: rotate(180deg); }
+
+      .accordion-detail {
+        padding: 0 12px 12px 28px;
+        border-top: 1px solid var(--border);
+        margin-top: 2px;
+        padding-top: 8px;
+      }
+
+      .detail-line {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        color: var(--text-dim);
+        padding: 2px 0;
+      }
+
+      .detail-empty {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        color: var(--text-dim);
+        font-style: italic;
+      }
+
+      .flat-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
       }
     </style>
   </head>
@@ -277,20 +287,22 @@
       <button class="btn-secondary" onclick="highlightIssues()">Highlight Issues</button>
     </div>
 
-    <div class="sheet-name">SHEET &nbsp;<span id="sheetName">—</span></div>
+    <div class="sheet-name">SHEET &nbsp;<span id="sheetName">N/A</span></div>
 
-    <div id="gaugeWrap" class="gauge-wrap" style="display: none;">
+    <div id="gaugeWrap" class="gauge-wrap">
       <svg viewBox="0 0 120 66" width="140" height="77">
         <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--border)" stroke-width="10" stroke-linecap="round" />
         <path id="gaugeArc" d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke-width="10" stroke-linecap="round" />
       </svg>
-      <div id="gaugeNumber" class="gauge-number">—</div>
+      <div id="gaugeNumber" class="gauge-number">N/A</div>
       <div class="gauge-label">Quality Score</div>
     </div>
 
-    <div id="resultsPanel" class="panel">
-      <div class="empty-state">Run analysis to see results</div>
-    </div>
+    <div class="section-label">At a glance</div>
+    <div id="gridPanel" class="grid"></div>
+
+    <div class="section-label">Checks</div>
+    <div id="accordionPanel"></div>
 
     <script>
       function analyzeSheet() {
@@ -303,96 +315,164 @@
         google.script.run.highlightIssues();
       }
 
-      // Builds one instrument row. status: 'info' (neutral data), or
-      // computed ok/warn based on whether count > 0.
-      function row(label, count, status, detail) {
-        const indicatorClass = status === 'info'
-          ? 'info'
-          : (count > 0 ? 'warn' : 'ok');
-
-        const detailHtml = detail
-          ? `<div class="row-detail">${detail}</div>`
-          : '';
-
-        return `
-          <div class="row">
-            <div class="indicator ${indicatorClass}"></div>
-            <div class="row-main">
-              <div class="row-label">${label}</div>
-              ${detailHtml}
-            </div>
-            <div class="row-value">${count}</div>
-          </div>
-        `;
+      // A result object with everything empty/null, used before the first
+      // analysis runs so the sidebar never looks "broken" or blank.
+      function placeholderResult() {
+        return {
+          name: null,
+          rows: null,
+          columns: null,
+          emptyRows: null,
+          emptyColumns: null,
+          duplicateHeaders: [],
+          missingHeaders: [],
+          incompleteCells: [],
+          dataTypeIssues: { cells: [], columnSummary: [] },
+          formulaErrors: { cells: [], errorTypeCounts: {} },
+          duplicateRows: [],
+          notAnalyzed: true
+        };
       }
 
-      // TEMPORARY client-side estimate — will be replaced once the real
-      // "Data Quality Score" is calculated server-side in Code.js (roadmap 1.0).
+      function gridCard(label, count, status, notAnalyzed) {
+        if (notAnalyzed) {
+          return `
+            <div class="card">
+              <div class="card-top"><div class="indicator"></div><div class="card-label">${label}</div></div>
+              <div class="card-value na">N/A</div>
+            </div>`;
+        }
+
+        const indicatorClass = status === 'info' ? 'info' : (count > 0 ? 'warn' : 'ok');
+
+        return `
+          <div class="card">
+            <div class="card-top"><div class="indicator ${indicatorClass}"></div><div class="card-label">${label}</div></div>
+            <div class="card-value">${count}</div>
+          </div>`;
+      }
+
+      // Renders one expandable check. detailLines is an array of strings,
+      // each becomes its own line inside the expanded panel.
+      function accordionItem(label, count, detailLines, notAnalyzed) {
+        if (notAnalyzed) {
+          return `
+            <div class="flat-row">
+              <div class="indicator"></div>
+              <div class="row-main"><div class="row-label">${label}</div></div>
+              <div class="row-value na">N/A</div>
+            </div>`;
+        }
+
+        const indicatorClass = count > 0 ? 'warn' : 'ok';
+        const detailHtml = detailLines.length > 0
+          ? detailLines.map(line => `<div class="detail-line">${line}</div>`).join('')
+          : `<div class="detail-empty">No issues found</div>`;
+
+        return `
+          <details class="accordion">
+            <summary>
+              <div class="indicator ${indicatorClass}"></div>
+              <div class="row-main"><div class="row-label">${label}</div></div>
+              <div class="row-value">${count}</div>
+              <div class="chevron">&#9662;</div>
+            </summary>
+            <div class="accordion-detail">${detailHtml}</div>
+          </details>`;
+      }
+
+      // Converts a 1-indexed column number to spreadsheet letters: 1 -> A, 27 -> AA, etc.
+      function columnToLetter(col) {
+        let letter = '';
+        while (col > 0) {
+          const remainder = (col - 1) % 26;
+          letter = String.fromCharCode(65 + remainder) + letter;
+          col = Math.floor((col - 1) / 26);
+        }
+        return letter;
+      }
+
       function estimateScore(result) {
         const issueCount =
-          result.emptyRows +
-          result.emptyColumns +
-          result.duplicateHeaders.length +
-          result.missingHeaders.length +
-          result.incompleteCells.length +
-          result.dataTypeIssues.cells.length +
-          result.formulaErrors.cells.length +
-          result.duplicateRows.length;
+          result.emptyRows + result.emptyColumns +
+          result.duplicateHeaders.length + result.missingHeaders.length +
+          result.incompleteCells.length + result.dataTypeIssues.cells.length +
+          result.formulaErrors.cells.length + result.duplicateRows.length;
 
         return Math.max(0, 100 - issueCount * 5);
       }
 
-      function renderGauge(score) {
-        const arcLength = 157.08; // circumference of the semicircle path, precomputed
+      function renderGauge(score, notAnalyzed) {
+        const numberEl = document.getElementById('gaugeNumber');
         const arc = document.getElementById('gaugeArc');
-        const color = score >= 80 ? 'var(--ok)' : (score >= 50 ? 'var(--warn)' : '#f0554c');
+
+        if (notAnalyzed) {
+          numberEl.textContent = 'N/A';
+          numberEl.style.color = 'var(--text-dim)';
+          arc.style.stroke = 'transparent';
+          return;
+        }
+
+        const arcLength = 157.08;
+        const color = score >= 80 ? 'var(--ok)' : (score >= 50 ? 'var(--warn)' : 'var(--bad)');
 
         arc.style.stroke = color;
         arc.style.strokeDasharray = (score / 100 * arcLength) + ', ' + arcLength;
-
-        document.getElementById('gaugeNumber').textContent = score;
-        document.getElementById('gaugeNumber').style.color = color;
-        document.getElementById('gaugeWrap').style.display = 'flex';
+        numberEl.textContent = score;
+        numberEl.style.color = color;
       }
 
       function showAnalysis(result) {
-        document.getElementById('sheetName').textContent = result.name;
-        renderGauge(estimateScore(result));
+        const na = !!result.notAnalyzed;
 
-        const duplicateHeaderDetail = result.duplicateHeaders.length > 0
-          ? result.duplicateHeaders.map(h => h.text).join(', ')
-          : '';
+        document.getElementById('sheetName').textContent = na ? 'N/A' : result.name;
+        renderGauge(na ? null : estimateScore(result), na);
 
-        const missingHeaderDetail = result.missingHeaders.length > 0
-          ? 'Col ' + result.missingHeaders.map(h => h.column).join(', ')
-          : '';
-
-        const dataTypeDetail = result.dataTypeIssues.columnSummary.length > 0
-          ? result.dataTypeIssues.columnSummary
-              .map(s => `Col ${s.column} (${s.dominantType}): ${s.inconsistentCount} off`)
-              .join(' · ')
-          : '';
-
-        const formulaErrorEntries = Object.entries(result.formulaErrors.errorTypeCounts);
-        const formulaErrorDetail = formulaErrorEntries.length > 0
-          ? formulaErrorEntries.map(([type, count]) => `${type}: ${count}`).join(' · ')
-          : '';
-
-        const html = [
-          row('Rows', result.rows, 'info'),
-          row('Columns', result.columns, 'info'),
-          row('Empty Rows', result.emptyRows),
-          row('Empty Columns', result.emptyColumns),
-          row('Duplicate Headers', result.duplicateHeaders.length, null, duplicateHeaderDetail),
-          row('Missing Headers', result.missingHeaders.length, null, missingHeaderDetail),
-          row('Incomplete Cells', result.incompleteCells.length),
-          row('Type Inconsistencies', result.dataTypeIssues.cells.length, null, dataTypeDetail),
-          row('Formula Errors', result.formulaErrors.cells.length, null, formulaErrorDetail),
-          row('Duplicate Rows', result.duplicateRows.length)
+        const gridHtml = [
+          gridCard('Rows', result.rows, 'info', na),
+          gridCard('Columns', result.columns, 'info', na),
+          gridCard('Empty Rows', result.emptyRows, null, na),
+          gridCard('Empty Columns', result.emptyColumns, null, na),
+          gridCard('Incomplete Cells', result.incompleteCells.length, null, na),
+          gridCard('Duplicate Rows', result.duplicateRows.length, null, na)
         ].join('');
+        document.getElementById('gridPanel').innerHTML = gridHtml;
 
-        document.getElementById('resultsPanel').innerHTML = html;
+        const duplicateHeaderLines = result.duplicateHeaders.map(
+          h => `Col ${columnToLetter(h.column)} — "${h.text}"`
+        );
+
+        const missingHeaderLines = result.missingHeaders.map(
+          h => `Col ${columnToLetter(h.column)}`
+        );
+
+        // Look up each column's dominant type + percentage so we can explain *why* a cell is flagged
+        const dominantInfoByColumn = {};
+        result.dataTypeIssues.columnSummary.forEach(s => {
+          dominantInfoByColumn[s.column] = { type: s.dominantType, percentage: s.dominantPercentage };
+        });
+
+        const dataTypeLines = result.dataTypeIssues.cells.map(c => {
+          const cellRef = columnToLetter(c.column) + c.row;
+          const info = dominantInfoByColumn[c.column];
+          return `Cell ${cellRef} — ${c.type} (column is ${info.percentage}% ${info.type})`;
+        });
+
+        const formulaErrorLines = result.formulaErrors.cells.map(
+          c => `Cell ${columnToLetter(c.column)}${c.row} — ${c.errorType}`
+        );
+
+        const accordionHtml = [
+          accordionItem('Duplicate Headers', result.duplicateHeaders.length, duplicateHeaderLines, na),
+          accordionItem('Missing Headers', result.missingHeaders.length, missingHeaderLines, na),
+          accordionItem('Type Inconsistencies', result.dataTypeIssues.cells.length, dataTypeLines, na),
+          accordionItem('Formula Errors', result.formulaErrors.cells.length, formulaErrorLines, na)
+        ].join('');
+        document.getElementById('accordionPanel').innerHTML = accordionHtml;
       }
+
+      // Load the sidebar with placeholder "N/A" state immediately, before any analysis runs.
+      showAnalysis(placeholderResult());
     </script>
   </body>
 </html>
