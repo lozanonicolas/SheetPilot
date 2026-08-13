@@ -2,108 +2,295 @@
 <html>
   <head>
     <base target="_top">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 16px;
+      :root {
+        --bg: #12161d;
+        --panel: #1a2029;
+        --border: #262d38;
+        --text: #e7ebf1;
+        --text-dim: #7c8698;
+        --ok: #37d67a;
+        --warn: #f5a623;
+        --info: #6c93ff;
       }
 
-      h1 {
-        margin-top: 0;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 16px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+      }
+
+      .wordmark {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 2px;
+      }
+
+      .wordmark .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ok);
+        box-shadow: 0 0 6px var(--ok);
+        flex-shrink: 0;
+      }
+
+      .wordmark h1 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        margin: 0;
+      }
+
+      .eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin: 0 0 18px 16px;
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
       }
 
       button {
-        width: 100%;
-        padding: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 11px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
         cursor: pointer;
-        margin-bottom: 8px;
+        transition: border-color 0.15s ease, background 0.15s ease;
       }
 
-      .results {
-        margin-top: 20px;
+      button:focus-visible {
+        outline: 2px solid var(--info);
+        outline-offset: 2px;
       }
 
-      .stat {
+      .btn-primary {
+        background: var(--info);
+        color: #0c1017;
+        border-color: var(--info);
+      }
+
+      .btn-primary:hover {
+        background: #82a4ff;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--text);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--text-dim);
+      }
+
+      .sheet-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+        padding-bottom: 12px;
         margin-bottom: 12px;
+        border-bottom: 1px solid var(--border);
       }
 
-      .label {
+      .sheet-name span {
+        color: var(--text);
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .row:last-child {
+        border-bottom: none;
+      }
+
+      .row .indicator {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: var(--text-dim);
+      }
+
+      .row .indicator.ok {
+        background: var(--ok);
+        box-shadow: 0 0 5px var(--ok);
+      }
+
+      .row .indicator.warn {
+        background: var(--warn);
+        box-shadow: 0 0 5px var(--warn);
+      }
+
+      .row .indicator.info {
+        background: var(--info);
+      }
+
+      .row-main {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .row-label {
         font-size: 12px;
-        color: #666;
+        color: var(--text-dim);
       }
 
-      .value {
-        font-size: 20px;
-        font-weight: bold;
+      .row-detail {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: var(--text-dim);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .row-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      .section-gap {
+        height: 14px;
+      }
+
+      .empty-state {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+        text-align: center;
+        padding: 24px 12px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tab {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        padding: 8px 4px 10px;
+        cursor: pointer;
+        border-radius: 0;
+      }
+
+      .tab.active {
+        color: var(--text);
+        border-bottom-color: var(--info);
+      }
+
+      .tab:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+      }
+
+      .tab:disabled:hover {
+        border-color: transparent;
+      }
+
+      .gauge-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0 16px;
+      }
+
+      .gauge-number {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 26px;
+        font-weight: 700;
+        margin-top: -34px;
+      }
+
+      .gauge-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-top: 2px;
       }
     </style>
   </head>
 
   <body>
-    <h1>SheetPilot</h1>
+    <div class="wordmark">
+      <div class="dot"></div>
+      <h1>SHEETPILOT</h1>
+    </div>
+    <div class="eyebrow">Systems check</div>
 
-    <p>Your Sheets™ productivity toolkit.</p>
+    <div class="tabs">
+      <button class="tab active" type="button">Analyzer</button>
+      <button class="tab" type="button" disabled>Cleaner</button>
+      <button class="tab" type="button" disabled>Settings</button>
+    </div>
 
-    <button onclick="analyzeSheet()">Analyze Sheet</button>
-    <button onclick="highlightIssues()">Highlight Issues</button>
+    <div class="controls">
+      <button class="btn-primary" onclick="analyzeSheet()">Run Analysis</button>
+      <button class="btn-secondary" onclick="highlightIssues()">Highlight Issues</button>
+    </div>
 
-    <div class="results">
-      <div class="stat">
-        <div class="label">Current Sheet</div>
-        <div class="value" id="sheetName">-</div>
-      </div>
+    <div class="sheet-name">SHEET &nbsp;<span id="sheetName">—</span></div>
 
-      <div class="stat">
-        <div class="label">Rows</div>
-        <div class="value" id="rowCount">-</div>
-      </div>
+    <div id="gaugeWrap" class="gauge-wrap" style="display: none;">
+      <svg viewBox="0 0 120 66" width="140" height="77">
+        <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--border)" stroke-width="10" stroke-linecap="round" />
+        <path id="gaugeArc" d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke-width="10" stroke-linecap="round" />
+      </svg>
+      <div id="gaugeNumber" class="gauge-number">—</div>
+      <div class="gauge-label">Quality Score</div>
+    </div>
 
-      <div class="stat">
-        <div class="label">Columns</div>
-        <div class="value" id="columnCount">-</div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Empty Rows</div>
-        <div class="value" id="emptyRowCount">-</div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Empty Columns</div>
-        <div class="value" id="emptyColumnCount">-</div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Duplicate Headers</div>
-        <div class="value" id="duplicateHeaderCount">-</div>
-        <div class="label" id="duplicateHeaderList"></div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Missing Headers</div>
-        <div class="value" id="missingHeaderCount">-</div>
-        <div class="label" id="missingHeaderList"></div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Incomplete Cells</div>
-        <div class="value" id="incompleteCellCount">-</div>
-      </div>
-      <div class="stat">
-        <div class="label">Data Type Inconsistencies</div>
-        <div class="value" id="dataTypeInconsistencyCount">-</div>
-        <div class="label" id="dataTypeInconsistencySummary"></div>
-      </div>
-      <div class="stat">
-        <div class="label">Formula Errors</div>
-        <div class="value" id="formulaErrorCount">-</div>
-        <div class="label" id="formulaErrorSummary"></div>
-      </div>
-      <div class="stat">
-        <div class="label">Duplicate Rows</div>
-        <div class="value" id="duplicateRowCount">-</div>
-      </div>
+    <div id="resultsPanel" class="panel">
+      <div class="empty-state">Run analysis to see results</div>
+    </div>
 
     <script>
       function analyzeSheet() {
@@ -116,42 +303,95 @@
         google.script.run.highlightIssues();
       }
 
+      // Builds one instrument row. status: 'info' (neutral data), or
+      // computed ok/warn based on whether count > 0.
+      function row(label, count, status, detail) {
+        const indicatorClass = status === 'info'
+          ? 'info'
+          : (count > 0 ? 'warn' : 'ok');
+
+        const detailHtml = detail
+          ? `<div class="row-detail">${detail}</div>`
+          : '';
+
+        return `
+          <div class="row">
+            <div class="indicator ${indicatorClass}"></div>
+            <div class="row-main">
+              <div class="row-label">${label}</div>
+              ${detailHtml}
+            </div>
+            <div class="row-value">${count}</div>
+          </div>
+        `;
+      }
+
+      // TEMPORARY client-side estimate — will be replaced once the real
+      // "Data Quality Score" is calculated server-side in Code.js (roadmap 1.0).
+      function estimateScore(result) {
+        const issueCount =
+          result.emptyRows +
+          result.emptyColumns +
+          result.duplicateHeaders.length +
+          result.missingHeaders.length +
+          result.incompleteCells.length +
+          result.dataTypeIssues.cells.length +
+          result.formulaErrors.cells.length +
+          result.duplicateRows.length;
+
+        return Math.max(0, 100 - issueCount * 5);
+      }
+
+      function renderGauge(score) {
+        const arcLength = 157.08; // circumference of the semicircle path, precomputed
+        const arc = document.getElementById('gaugeArc');
+        const color = score >= 80 ? 'var(--ok)' : (score >= 50 ? 'var(--warn)' : '#f0554c');
+
+        arc.style.stroke = color;
+        arc.style.strokeDasharray = (score / 100 * arcLength) + ', ' + arcLength;
+
+        document.getElementById('gaugeNumber').textContent = score;
+        document.getElementById('gaugeNumber').style.color = color;
+        document.getElementById('gaugeWrap').style.display = 'flex';
+      }
+
       function showAnalysis(result) {
         document.getElementById('sheetName').textContent = result.name;
-        document.getElementById('rowCount').textContent = result.rows;
-        document.getElementById('columnCount').textContent = result.columns;
-        document.getElementById('emptyRowCount').textContent = result.emptyRows;
-        document.getElementById('emptyColumnCount').textContent = result.emptyColumns;
+        renderGauge(estimateScore(result));
 
-        document.getElementById('duplicateHeaderCount').textContent = result.duplicateHeaders.length;
-        document.getElementById('duplicateHeaderList').textContent = result.duplicateHeaders.length > 0
+        const duplicateHeaderDetail = result.duplicateHeaders.length > 0
           ? result.duplicateHeaders.map(h => h.text).join(', ')
           : '';
 
-        document.getElementById('missingHeaderCount').textContent = result.missingHeaders.length;
-        document.getElementById('missingHeaderList').textContent = result.missingHeaders.length > 0
-          ? 'Column(s): ' + result.missingHeaders.map(h => h.column).join(', ')
+        const missingHeaderDetail = result.missingHeaders.length > 0
+          ? 'Col ' + result.missingHeaders.map(h => h.column).join(', ')
           : '';
 
-        document.getElementById('incompleteCellCount').textContent = result.incompleteCells.length;
-        document.getElementById('dataTypeInconsistencyCount').textContent = result.dataTypeIssues.cells.length;
-
-        const summaryEl = document.getElementById('dataTypeInconsistencySummary');
-        summaryEl.textContent = result.dataTypeIssues.columnSummary.length > 0
+        const dataTypeDetail = result.dataTypeIssues.columnSummary.length > 0
           ? result.dataTypeIssues.columnSummary
               .map(s => `Col ${s.column} (${s.dominantType}): ${s.inconsistentCount} off`)
               .join(' · ')
           : '';
 
-        document.getElementById('formulaErrorCount').textContent = result.formulaErrors.cells.length;
-
-        const errorSummaryEl = document.getElementById('formulaErrorSummary');
-        const errorEntries = Object.entries(result.formulaErrors.errorTypeCounts);
-        errorSummaryEl.textContent = errorEntries.length > 0
-          ? errorEntries.map(([type, count]) => `${type}: ${count}`).join(' · ')
+        const formulaErrorEntries = Object.entries(result.formulaErrors.errorTypeCounts);
+        const formulaErrorDetail = formulaErrorEntries.length > 0
+          ? formulaErrorEntries.map(([type, count]) => `${type}: ${count}`).join(' · ')
           : '';
 
-        document.getElementById('duplicateRowCount').textContent = result.duplicateRows.length;
+        const html = [
+          row('Rows', result.rows, 'info'),
+          row('Columns', result.columns, 'info'),
+          row('Empty Rows', result.emptyRows),
+          row('Empty Columns', result.emptyColumns),
+          row('Duplicate Headers', result.duplicateHeaders.length, null, duplicateHeaderDetail),
+          row('Missing Headers', result.missingHeaders.length, null, missingHeaderDetail),
+          row('Incomplete Cells', result.incompleteCells.length),
+          row('Type Inconsistencies', result.dataTypeIssues.cells.length, null, dataTypeDetail),
+          row('Formula Errors', result.formulaErrors.cells.length, null, formulaErrorDetail),
+          row('Duplicate Rows', result.duplicateRows.length)
+        ].join('');
+
+        document.getElementById('resultsPanel').innerHTML = html;
       }
     </script>
   </body>
