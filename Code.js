@@ -49,13 +49,17 @@ function analyzeSheetData(values) {
   }
 
   const duplicateHeaders = findDuplicateHeaders(values);
+  const incompleteCells = findIncompleteDataCells(values);
+  const missingHeaders = incompleteCells.filter(cell => cell.row === 1);
 
   return {
     rows: values.length - 1,
     columns: values[0].length,
     emptyRows: emptyRows,
     emptyColumns: emptyColumns,
-    duplicateHeaders: duplicateHeaders
+    duplicateHeaders: duplicateHeaders,
+    missingHeaders: missingHeaders,
+    incompleteCells: incompleteCells
   };
 }
 
@@ -80,14 +84,51 @@ function findDuplicateHeaders(values) {
   const duplicates = [];
 
   normalized.forEach((header, index) => {
-    if (header === '') return; // empty headers are a separate check, not this one
+    if (header === '') return; // empty headers are covered by findIncompleteDataCells
 
     if (seen[header] !== undefined) {
-      duplicates.push(headers[index]); // keep the original (non-normalized) text
+      duplicates.push({
+        row: 1,
+        column: index + 1,
+        text: headers[index] // original text, used for display in the sidebar
+      });
     } else {
       seen[header] = index;
     }
   });
 
   return duplicates;
+}
+
+function findIncompleteDataCells(values) {
+  const missingCells = [];
+
+  for (let row = 0; row < values.length; row++) {
+    for (let column = 0; column < values[row].length; column++) {
+      const cell = String(values[row][column]).trim();
+
+      if (cell === '') {
+        missingCells.push({ row: row + 1, column: column + 1 });
+      }
+    }
+  }
+
+  return missingCells;
+}
+
+function highlightCells(cellPositions) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  cellPositions.forEach(cell => {
+    sheet.getRange(cell.row, cell.column).setBackground('#FFFF00'); //Bright Yellow
+  });
+}
+
+function highlightIssues() {
+  const sheetData = getActiveSheetValues();
+  const duplicateHeaders = findDuplicateHeaders(sheetData.values);
+  const incompleteCells = findIncompleteDataCells(sheetData.values);
+
+  highlightCells(duplicateHeaders);
+  highlightCells(incompleteCells);
 }
