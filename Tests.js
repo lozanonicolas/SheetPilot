@@ -174,6 +174,22 @@ function test_findFormulaErrors_detectsAndCategorizes() {
   Logger.log('✅ test_findFormulaErrors_detectsAndCategorizes passed');
 }
 
+function test_findDuplicateRows_detectsCaseAndWhitespace() {
+  const values = [
+    ['Name', 'Age'],
+    ['John', 21],
+    ['Sarah', 25],
+    ['john', ' 21 '], // duplicate of row 2, different case/whitespace
+    ['Mike', 30]
+  ];
+
+  const result = findDuplicateRows(values);
+
+  assert(result.length === 1, 'expected 1 duplicate row, got ' + result.length);
+  assert(result[0].row === 4, 'expected duplicate at row 4, got row ' + result[0].row);
+  Logger.log('✅ test_findDuplicateRows_detectsCaseAndWhitespace passed');
+}
+
 // Run all tests in one go — handy while the suite is still small
 function runAllTests() {
   test_analyzeSheetData_detectsEmptyRow();
@@ -187,5 +203,6 @@ function runAllTests() {
   test_findDataTypeInconsistencies_ignoresTiedColumns();
   test_findDataTypeInconsistencies_ignoresEmptyCells();
   test_findFormulaErrors_detectsAndCategorizes();
+  test_findDuplicateRows_detectsCaseAndWhitespace();
   Logger.log('✅ All tests passed');
 }

@@ -100,6 +100,10 @@
         <div class="value" id="formulaErrorCount">-</div>
         <div class="label" id="formulaErrorSummary"></div>
       </div>
+      <div class="stat">
+        <div class="label">Duplicate Rows</div>
+        <div class="value" id="duplicateRowCount">-</div>
+      </div>
 
     <script>
       function analyzeSheet() {
@@ -146,6 +150,8 @@
         errorSummaryEl.textContent = errorEntries.length > 0
           ? errorEntries.map(([type, count]) => `${type}: ${count}`).join(' · ')
           : '';
+
+        document.getElementById('duplicateRowCount').textContent = result.duplicateRows.length;
       }
     </script>
   </body>

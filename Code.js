@@ -53,6 +53,7 @@ function analyzeSheetData(values) {
   const missingHeaders = incompleteCells.filter(cell => cell.row === 1);
   const dataTypeIssues = findDataTypeInconsistencies(values);
   const formulaErrors = findFormulaErrors(values);
+  const duplicateRows = findDuplicateRows(values);
 
   return {
     rows: values.length - 1,
@@ -63,7 +64,8 @@ function analyzeSheetData(values) {
     missingHeaders: missingHeaders,
     incompleteCells: incompleteCells,
     dataTypeIssues: dataTypeIssues,
-    formulaErrors: formulaErrors
+    formulaErrors: formulaErrors,
+    duplicateRows: duplicateRows
   };
 }
 
@@ -134,11 +136,13 @@ function highlightIssues() {
   const incompleteCells = findIncompleteDataCells(sheetData.values);
   const dataTypeIssues = findDataTypeInconsistencies(sheetData.values);
   const formulaErrors = findFormulaErrors(sheetData.values);
+  const duplicateRows = findDuplicateRows(sheetData.values);
 
   highlightCells(duplicateHeaders);
   highlightCells(incompleteCells);
   highlightCells(dataTypeIssues.cells);
   highlightCells(formulaErrors.cells);
+  highlightRows(duplicateRows);
 }
 
 function getCellType(cell) {
@@ -230,4 +234,33 @@ function findFormulaErrors(values) {
   }
 
   return { cells, errorTypeCounts };
+}
+
+function findDuplicateRows(values) {
+  const seen = {};
+  const duplicateRows = [];
+
+  for (let row = 1; row < values.length; row++) {
+    // Normalize the whole row into a single comparable string:
+    const key = values[row]
+      .map(cell => String(cell).trim().toLowerCase())
+      .join('|');
+
+    if (seen[key] !== undefined) {
+      duplicateRows.push({ row: row + 1 }); // 2nd+ occurrence, the original stays unmarked
+    } else {
+      seen[key] = row;
+    }
+  }
+
+  return duplicateRows;
+}
+
+function highlightRows(rowPositions) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const lastColumn = sheet.getLastColumn();
+
+  rowPositions.forEach(row => {
+    sheet.getRange(row.row, 1, 1, lastColumn).setBackground('#FFFF00');
+  });
 }
