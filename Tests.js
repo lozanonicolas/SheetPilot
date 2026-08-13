@@ -106,6 +106,74 @@ function test_analyzeSheetData_missingHeadersIsSubsetOfIncompleteCells() {
   Logger.log('✅ test_analyzeSheetData_missingHeadersIsSubsetOfIncompleteCells passed');
 }
 
+function test_findDataTypeInconsistencies_detectsMinorityType() {
+  const values = [
+    ['Name', 'Age'],
+    ['John', 21],
+    ['Sarah', 25],
+    ['Mike', 'thirty'],
+    ['Ana', 30]
+  ];
+
+  const result = findDataTypeInconsistencies(values);
+
+  assert(result.cells.length === 1, 'expected 1 inconsistency, got ' + result.cells.length);
+  assert(result.cells[0].row === 4 && result.cells[0].column === 2, 'expected inconsistency at row 4, col 2');
+
+  assert(result.columnSummary.length === 1, 'expected 1 column in summary, got ' + result.columnSummary.length);
+  assert(result.columnSummary[0].dominantType === 'number', 'expected dominant type number');
+  assert(result.columnSummary[0].inconsistentCount === 1, 'expected inconsistentCount 1');
+  Logger.log('✅ test_findDataTypeInconsistencies_detectsMinorityType passed');
+}
+
+function test_findDataTypeInconsistencies_ignoresTiedColumns() {
+  const values = [
+    ['Mixed'],
+    [1],
+    ['a'],
+    [2],
+    ['b']
+  ];
+
+  const result = findDataTypeInconsistencies(values);
+
+  assert(result.cells.length === 0, 'expected 0 inconsistencies on a tied column, got ' + result.cells.length);
+  assert(result.columnSummary.length === 0, 'expected 0 columns in summary for a tie');
+  Logger.log('✅ test_findDataTypeInconsistencies_ignoresTiedColumns passed');
+}
+
+function test_findDataTypeInconsistencies_ignoresEmptyCells() {
+  const values = [
+    ['Age'],
+    [21],
+    [''],
+    [25]
+  ];
+
+  const result = findDataTypeInconsistencies(values);
+
+  assert(result.cells.length === 0, 'expected 0 inconsistencies when only empty cells differ, got ' + result.cells.length);
+  assert(result.columnSummary.length === 0, 'expected 0 columns in summary when column is clean');
+  Logger.log('✅ test_findDataTypeInconsistencies_ignoresEmptyCells passed');
+}
+
+function test_findFormulaErrors_detectsAndCategorizes() {
+  const values = [
+    ['Name', 'Result'],
+    ['John', '#DIV/0!'],
+    ['Sarah', 42],
+    ['Mike', '#REF!'],
+    ['Ana', '#DIV/0!']
+  ];
+
+  const result = findFormulaErrors(values);
+
+  assert(result.cells.length === 3, 'expected 3 formula errors, got ' + result.cells.length);
+  assert(result.errorTypeCounts['#DIV/0!'] === 2, 'expected 2 #DIV/0! errors, got ' + result.errorTypeCounts['#DIV/0!']);
+  assert(result.errorTypeCounts['#REF!'] === 1, 'expected 1 #REF! error, got ' + result.errorTypeCounts['#REF!']);
+  Logger.log('✅ test_findFormulaErrors_detectsAndCategorizes passed');
+}
+
 // Run all tests in one go — handy while the suite is still small
 function runAllTests() {
   test_analyzeSheetData_detectsEmptyRow();
@@ -115,5 +183,9 @@ function runAllTests() {
   test_findIncompleteDataCells_findsEmptyAndWhitespaceInData();
   test_findIncompleteDataCells_includesHeaderRow();
   test_analyzeSheetData_missingHeadersIsSubsetOfIncompleteCells();
+  test_findDataTypeInconsistencies_detectsMinorityType();
+  test_findDataTypeInconsistencies_ignoresTiedColumns();
+  test_findDataTypeInconsistencies_ignoresEmptyCells();
+  test_findFormulaErrors_detectsAndCategorizes();
   Logger.log('✅ All tests passed');
 }

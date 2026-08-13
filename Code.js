@@ -51,6 +51,8 @@ function analyzeSheetData(values) {
   const duplicateHeaders = findDuplicateHeaders(values);
   const incompleteCells = findIncompleteDataCells(values);
   const missingHeaders = incompleteCells.filter(cell => cell.row === 1);
+  const dataTypeIssues = findDataTypeInconsistencies(values);
+  const formulaErrors = findFormulaErrors(values);
 
   return {
     rows: values.length - 1,
@@ -59,7 +61,9 @@ function analyzeSheetData(values) {
     emptyColumns: emptyColumns,
     duplicateHeaders: duplicateHeaders,
     missingHeaders: missingHeaders,
-    incompleteCells: incompleteCells
+    incompleteCells: incompleteCells,
+    dataTypeIssues: dataTypeIssues,
+    formulaErrors: formulaErrors
   };
 }
 
@@ -128,7 +132,102 @@ function highlightIssues() {
   const sheetData = getActiveSheetValues();
   const duplicateHeaders = findDuplicateHeaders(sheetData.values);
   const incompleteCells = findIncompleteDataCells(sheetData.values);
+  const dataTypeIssues = findDataTypeInconsistencies(sheetData.values);
+  const formulaErrors = findFormulaErrors(sheetData.values);
 
   highlightCells(duplicateHeaders);
   highlightCells(incompleteCells);
+  highlightCells(dataTypeIssues.cells);
+  highlightCells(formulaErrors.cells);
+}
+
+function getCellType(cell) {
+  if (typeof cell === 'number') return 'number';
+  if (Object.prototype.toString.call(cell) === '[object Date]') return 'date';
+  return 'text';
+}
+
+function findDataTypeInconsistencies(values) {
+  const cells = [];
+  const columnSummary = [];
+  const columnCount = values[0].length;
+
+  for (let column = 0; column < columnCount; column++) {
+    const typeCounts = {}; // e.g. { number: 4, text: 1 }
+    const cellTypes = []; // type of each data cell in this column, same order as rows
+    
+    for (let row = 1; row < values.length; row++) {
+      const cell = values[row][column];
+
+      // Skip empty cells
+      if (String(cell).trim() === '') {
+        cellTypes.push(null);
+        continue;
+      }
+
+      const type = getCellType(cell);
+      cellTypes.push(type);
+      typeCounts[type] = (typeCounts[type] || 0) + 1;
+    }
+
+    const dominantType = getDominantType(typeCounts);
+
+    if (dominantType === null) continue; // tie - skip this column
+
+    let inconsistentCount = 0;
+
+    cellTypes.forEach((type, index) => {
+      if (type !== null && type !== dominantType) {
+        cells.push({ row: index + 2, column: column + 1 });
+        inconsistentCount++;
+      }
+    });
+
+    // Only adds a summary entry if this column actually has a problem
+    if (inconsistentCount > 0) {
+      columnSummary.push({
+        column: column + 1,
+        dominantType: dominantType,
+        inconsistentCount: inconsistentCount
+      });
+    }
+  }
+
+  return { cells, columnSummary };
+}
+
+function getDominantType(typeCounts) {
+  const entries = Object.entries(typeCounts);
+  if (entries.length === 0) return null; // column has no data
+
+  entries.sort((a, b) => b[1] - a[1]); // sort by count, descending
+
+  const [topType, topCount] = entries[0];
+
+  // Check for a tie with the second place type
+  const isTie = entries.length > 1 && entries[1][1] === topCount;
+
+  return isTie ? null : topType;
+}
+
+const FORMULA_ERROR_TYPES = ['#DIV/0!', '#N/A', '#NAME?', '#NULL!', '#NUM!', '#REF!', '#VALUE!', '#ERROR!'];
+
+function findFormulaErrors(values) {
+  const cells = [];
+  const errorTypeCounts = {}; // e.g. { '#DIV/0!': 2, '#REF!': 1 }
+
+  // Start at row 1 to skip the header 
+  for (let row = 1; row < values.length; row++) {
+    for (let column = 0; column < values[row].length; column++) {
+      const cell = values[row][column];
+      const cellText = String(cell).trim();
+
+      if (FORMULA_ERROR_TYPES.includes(cellText)) {
+        cells.push({ row: row + 1, column: column + 1, errorType: cellText });
+        errorTypeCounts[cellText] = (errorTypeCounts[cellText] || 0) + 1;
+      }
+    }
+  }
+
+  return { cells, errorTypeCounts };
 }

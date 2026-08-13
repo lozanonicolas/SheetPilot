@@ -90,7 +90,16 @@
         <div class="label">Incomplete Cells</div>
         <div class="value" id="incompleteCellCount">-</div>
       </div>
-    </div>
+      <div class="stat">
+        <div class="label">Data Type Inconsistencies</div>
+        <div class="value" id="dataTypeInconsistencyCount">-</div>
+        <div class="label" id="dataTypeInconsistencySummary"></div>
+      </div>
+      <div class="stat">
+        <div class="label">Formula Errors</div>
+        <div class="value" id="formulaErrorCount">-</div>
+        <div class="label" id="formulaErrorSummary"></div>
+      </div>
 
     <script>
       function analyzeSheet() {
@@ -121,6 +130,22 @@
           : '';
 
         document.getElementById('incompleteCellCount').textContent = result.incompleteCells.length;
+        document.getElementById('dataTypeInconsistencyCount').textContent = result.dataTypeIssues.cells.length;
+
+        const summaryEl = document.getElementById('dataTypeInconsistencySummary');
+        summaryEl.textContent = result.dataTypeIssues.columnSummary.length > 0
+          ? result.dataTypeIssues.columnSummary
+              .map(s => `Col ${s.column} (${s.dominantType}): ${s.inconsistentCount} off`)
+              .join(' · ')
+          : '';
+
+        document.getElementById('formulaErrorCount').textContent = result.formulaErrors.cells.length;
+
+        const errorSummaryEl = document.getElementById('formulaErrorSummary');
+        const errorEntries = Object.entries(result.formulaErrors.errorTypeCounts);
+        errorSummaryEl.textContent = errorEntries.length > 0
+          ? errorEntries.map(([type, count]) => `${type}: ${count}`).join(' · ')
+          : '';
       }
     </script>
   </body>
