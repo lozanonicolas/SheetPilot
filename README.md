@@ -9,7 +9,7 @@ Google Sheets™ productivity toolkit built with Google Apps Script.
 </td>
 <td width="140">
 
-<img src="./assets/assets/sheetpilot_icon_only.png" alt="SheetPilot icon" width="110" />
+<img src="./assets/sheetpilot_icon_only.png" alt="SheetPilot icon" width="110" />
 
 </td>
 </tr>
