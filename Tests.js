@@ -192,6 +192,75 @@ function test_findDuplicateRows_detectsCaseAndWhitespace() {
   Logger.log('✅ test_findDuplicateRows_detectsCaseAndWhitespace passed');
 }
 
+function test_calculateQualityScore_perfectSheetScores100() {
+  const values = [
+    ['Name', 'Age'],
+    ['John', 21],
+    ['Sarah', 25]
+  ];
+
+  const analysis = analyzeSheetData(values);
+
+  assert(analysis.qualityScore === 100, 'expected 100, got ' + analysis.qualityScore);
+  Logger.log('✅ test_calculateQualityScore_perfectSheetScores100 passed');
+}
+
+function test_calculateQualityScore_weightsFormulaErrorsMoreThanIncompleteCells() {
+  const baseAnalysis = {
+    rows: 10, columns: 5,
+    emptyRows: 0, emptyColumns: 0,
+    duplicateHeaders: [], missingHeaders: [], incompleteCells: [],
+    dataTypeIssues: { cells: [], columnSummary: [] },
+    formulaErrors: { cells: [], errorTypeCounts: {} },
+    duplicateRows: []
+  };
+
+  const withIncomplete = Object.assign({}, baseAnalysis, { incompleteCells: [{ row: 2, column: 1 }] });
+  const withFormulaError = Object.assign({}, baseAnalysis, {
+    formulaErrors: { cells: [{ row: 2, column: 1, errorType: '#DIV/0!' }], errorTypeCounts: { '#DIV/0!': 1 } }
+  });
+
+  const scoreIncomplete = calculateQualityScore(withIncomplete);
+  const scoreFormulaError = calculateQualityScore(withFormulaError);
+
+  assert(scoreFormulaError < scoreIncomplete, 'expected formula error score to be lower');
+  Logger.log('✅ test_calculateQualityScore_weightsFormulaErrorsMoreThanIncompleteCells passed');
+}
+
+function test_trimToContentBounds_dropsTrailingEmptyRowsAndColumns() {
+  const values = [
+    ['Name', 'Age', '', ''],
+    ['John', 21, '', ''],
+    ['', '', '', ''],
+    ['', '', '', '']
+  ];
+
+  const trimmed = trimToContentBounds(values);
+
+  assert(trimmed.length === 2, 'expected 2 rows after trimming, got ' + trimmed.length);
+  assert(trimmed[0].length === 2, 'expected 2 columns after trimming, got ' + trimmed[0].length);
+  Logger.log('✅ test_trimToContentBounds_dropsTrailingEmptyRowsAndColumns passed');
+}
+
+function test_calculateQualityScore_smallSheetNotOverpenalized() {
+  const analysis = {
+    rows: 4,
+    columns: 3,
+    emptyRows: 0,
+    emptyColumns: 0,
+    duplicateHeaders: [],
+    incompleteCells: [{}],
+    dataTypeIssues: { cells: [{}, {}] },
+    formulaErrors: { cells: [] },
+    duplicateRows: []
+  };
+
+  const score = calculateQualityScore(analysis);
+
+  assert(score >= 85, 'expected a small sheet with 3 minor issues to score at least 85, got ' + score);
+  Logger.log('✅ test_calculateQualityScore_smallSheetNotOverpenalized passed');
+}
+
 // Run all tests in one go — handy while the suite is still small
 function runAllTests() {
   test_analyzeSheetData_detectsEmptyRow();
@@ -206,5 +275,9 @@ function runAllTests() {
   test_findDataTypeInconsistencies_ignoresEmptyCells();
   test_findFormulaErrors_detectsAndCategorizes();
   test_findDuplicateRows_detectsCaseAndWhitespace();
+  test_calculateQualityScore_perfectSheetScores100();
+  test_calculateQualityScore_weightsFormulaErrorsMoreThanIncompleteCells();
+  test_trimToContentBounds_dropsTrailingEmptyRowsAndColumns();
+  test_calculateQualityScore_smallSheetNotOverpenalized();
   Logger.log('✅ All tests passed');
 }

@@ -381,7 +381,7 @@
           </details>`;
       }
 
-      // Converts a 1-indexed column number to spreadsheet letters: 1 -> A, 27 -> AA, etc.
+      // Converts a 1 indexed column number to spreadsheet letters: 1 -> A, 27 -> AA
       function columnToLetter(col) {
         let letter = '';
         while (col > 0) {
@@ -426,7 +426,7 @@
         const na = !!result.notAnalyzed;
 
         document.getElementById('sheetName').textContent = na ? 'N/A' : result.name;
-        renderGauge(na ? null : estimateScore(result), na);
+        renderGauge(na ? null : result.qualityScore, na);
 
         const gridHtml = [
           gridCard('Rows', result.rows, 'info', na),
@@ -446,7 +446,7 @@
           h => `Col ${columnToLetter(h.column)}`
         );
 
-        // Look up each column's dominant type + percentage so we can explain *why* a cell is flagged
+        // Look up each column's dominant type + percentage so we can explain why a cell is flagged
         const dominantInfoByColumn = {};
         result.dataTypeIssues.columnSummary.forEach(s => {
           dominantInfoByColumn[s.column] = { type: s.dominantType, percentage: s.dominantPercentage };

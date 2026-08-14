@@ -17,7 +17,7 @@ function getActiveSheetValues() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   return {
     name: sheet.getName(),
-    values: sheet.getDataRange().getValues()
+    values: trimToContentBounds(sheet.getDataRange().getValues())
   };
 }
 
@@ -25,14 +25,14 @@ function analyzeSheetData(values) {
   let emptyRows = 0;
   let emptyColumns = 0;
 
-  //Check for empty rows
+  // Check for empty rows
   for (const row of values) {
     if (row.every(cell => cell === '')) {
       emptyRows++;
     }
   }
 
-  //Check for empty columns
+  // Check for empty columns
   for (let column = 0; column < values[0].length; column++) {
     let isEmpty = true;
 
@@ -55,7 +55,7 @@ function analyzeSheetData(values) {
   const formulaErrors = findFormulaErrors(values);
   const duplicateRows = findDuplicateRows(values);
 
-  return {
+  const analysis = {
     rows: values.length - 1,
     columns: values[0].length,
     emptyRows: emptyRows,
@@ -67,6 +67,10 @@ function analyzeSheetData(values) {
     formulaErrors: formulaErrors,
     duplicateRows: duplicateRows
   };
+
+  analysis.qualityScore = calculateQualityScore(analysis);
+
+  return analysis;
 }
 
 function analyzeActiveSheet() {
@@ -275,4 +279,53 @@ function columnToLetter(col) {
     col = Math.floor((col - 1) / 26);
   }
   return letter;
+}
+
+const ISSUE_WEIGHTS = {
+  emptyRowOrColumn: 1,
+  duplicateHeader: 1,
+  incompleteCell: 0.5,
+  dataTypeIssue: 1,
+  formulaError: 2,
+  duplicateRow: 1
+};
+
+const SCORE_SMOOTHING_BASELINE = 20;
+
+function calculateQualityScore(analysis) {
+  const totalCells = analysis.rows * analysis.columns;
+
+  if (totalCells <= 0) return 100; // nothing to grade, treat as clean
+
+  const weightedIssues =
+    (analysis.emptyRows * analysis.columns) * ISSUE_WEIGHTS.emptyRowOrColumn +
+    (analysis.emptyColumns * analysis.rows) * ISSUE_WEIGHTS.emptyRowOrColumn +
+    analysis.duplicateHeaders.length * ISSUE_WEIGHTS.duplicateHeader +
+    analysis.incompleteCells.length * ISSUE_WEIGHTS.incompleteCell +
+    analysis.dataTypeIssues.cells.length * ISSUE_WEIGHTS.dataTypeIssue +
+    analysis.formulaErrors.cells.length * ISSUE_WEIGHTS.formulaError +
+    (analysis.duplicateRows.length * analysis.columns) * ISSUE_WEIGHTS.duplicateRow;
+
+  const score = 100 - (weightedIssues / (totalCells + SCORE_SMOOTHING_BASELINE)) * 100;
+
+  return Math.max(0, Math.round(score));
+}
+
+// Trims the raw values matrix down to the actual content bounding box
+function trimToContentBounds(values) {
+  let lastContentRow = 0;
+  let lastContentColumn = 0;
+
+  for (let row = 0; row < values.length; row++) {
+    for (let column = 0; column < values[row].length; column++) {
+      if (String(values[row][column]).trim() !== '') {
+        if (row > lastContentRow) lastContentRow = row;
+        if (column > lastContentColumn) lastContentColumn = column;
+      }
+    }
+  }
+
+  return values
+    .slice(0, lastContentRow + 1)
+    .map(row => row.slice(0, lastContentColumn + 1));
 }
