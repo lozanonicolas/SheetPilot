@@ -32,12 +32,12 @@ SheetPilot scans the active spreadsheet in Google Sheets™ for common data-qual
 
 ## Development setup
 
-\`\`\`bash
+```bash
 git clone https://github.com/lozanonicolas/SheetPilot.git
 cd SheetPilot
 clasp login
 clasp push
-\`\`\`
+```
 
 Open any spreadsheet in Google Sheets™, then use the **SheetPilot** menu to launch the sidebar.
 
