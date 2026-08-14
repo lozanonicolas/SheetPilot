@@ -1,6 +1,6 @@
 # SheetPilot
 
-<img src="./assets/assets/sheetpilot_icon_only.jpg" alt="SheetPilot icon" width="80" />
+<img src="./assets/sheetpilot_icon_only.jpg" alt="SheetPilot icon" width="80" />
 
 Google Sheets™ productivity toolkit built with Google Apps Script.
 
