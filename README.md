@@ -1,19 +1,10 @@
-<table>
-<tr>
-<td>
+<img src="./assets/sheetpilot_icon_only.png" alt="SheetPilot icon" width="160" align="right" />
 
 # SheetPilot
 
 Google Sheets™ productivity toolkit built with Google Apps Script.
 
-</td>
-<td width="140">
-
-<img src="./assets/sheetpilot_icon_only.png" alt="SheetPilot icon" width="110" />
-
-</td>
-</tr>
-</table>
+<br clear="both" />
 
 ## Overview
 
