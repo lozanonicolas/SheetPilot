@@ -27,8 +27,36 @@ SheetPilot scans the active spreadsheet in Google Sheets™ for common data-qual
 
 ## Roadmap
 
-- **1.1 — Data Cleaner**: remove empty rows/columns, remove duplicates, trim whitespace, normalize data
-- **1.2 — Smart Formatting**: format headers, auto-resize columns, freeze headers, create filters, format dates/numbers
+### 1.1 — Data Cleaner
+- Remove empty rows/columns
+- Remove duplicates
+- Trim whitespace
+- Normalize data
+- Basic error handling (try/catch with clear messages) before any destructive action
+- Confirmation step before irreversible changes (e.g. preview before deleting rows)
+- Activate the "Cleaner" tab in the sidebar
+
+### 1.2 — Smart Formatting
+- Format headers
+- Auto-resize columns
+- Freeze headers
+- Create filters
+- Format dates/numbers
+- Non-color indicators alongside the red/amber/green status system, for accessibility
+
+### Housekeeping (ongoing, no fixed version)
+- `CHANGELOG.md`
+- README screenshots / demo GIF of the sidebar in action
+- Marketplace prep: icon sizes, listing screenshots, OAuth verification
+- Recalibrate `SCORE_SMOOTHING_BASELINE` with real-world usage
+
+### Future ideas (post-v1, not yet scheduled)
+- Outlier detection within numeric columns
+- Inconsistent date format detection (e.g. mixed DD/MM/YYYY vs MM/DD/YYYY)
+- Export analysis report to PDF or a new sheet
+- Column-level insights (min/max/average, unique values, % completeness)
+- User-configurable rules (custom weights, excluded columns) — ties into the "Settings" tab
+- Compare two sheets/tabs for differences
 
 ## Tech stack
 

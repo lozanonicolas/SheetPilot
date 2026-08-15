@@ -28,11 +28,23 @@
         font-family: 'Inter', sans-serif;
       }
 
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+      }
+
+      .header-icon {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+      }
+
       .wordmark {
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 2px;
       }
 
       .wordmark .dot {
@@ -270,9 +282,12 @@
   </head>
 
   <body>
-    <div class="wordmark">
-      <div class="dot"></div>
-      <h1>SHEETPILOT</h1>
+    <div class="header-row">
+      <div class="wordmark">
+        <div class="dot"></div>
+        <h1>SHEETPILOT</h1>
+      </div>
+      <img class="header-icon" src="https://raw.githubusercontent.com/lozanonicolas/SheetPilot/main/assets/sheetpilot_icon_only.png" alt="SheetPilot" />
     </div>
     <div class="eyebrow">Systems check</div>
 
@@ -382,6 +397,9 @@
       }
 
       // Converts a 1 indexed column number to spreadsheet letters: 1 -> A, 27 -> AA
+      // Converts a 1 indexed column number to spreadsheet letters: 1 -> A, 27 -> AA
+      // Converts a 1 indexed column number to spreadsheet letters: 1 -> A, 27 -> AA
+      // Converts a 1 indexed column number to spreadsheet letters: 1 -> A, 27 -> AA
       function columnToLetter(col) {
         let letter = '';
         while (col > 0) {
@@ -390,16 +408,6 @@
           col = Math.floor((col - 1) / 26);
         }
         return letter;
-      }
-
-      function estimateScore(result) {
-        const issueCount =
-          result.emptyRows + result.emptyColumns +
-          result.duplicateHeaders.length + result.missingHeaders.length +
-          result.incompleteCells.length + result.dataTypeIssues.cells.length +
-          result.formulaErrors.cells.length + result.duplicateRows.length;
-
-        return Math.max(0, 100 - issueCount * 5);
       }
 
       function renderGauge(score, notAnalyzed) {
