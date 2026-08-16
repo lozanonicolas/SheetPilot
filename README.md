@@ -45,6 +45,7 @@ SheetPilot scans the active spreadsheet in Google Sheets™ for common data-qual
 - Non-color indicators alongside the red/amber/green status system, for accessibility
 
 ### Housekeeping (ongoing, no fixed version)
+- CI pipeline to run `Tests.js` automatically on push
 - `CHANGELOG.md`
 - README screenshots / demo GIF of the sidebar in action
 - Marketplace prep: icon sizes, listing screenshots, OAuth verification
