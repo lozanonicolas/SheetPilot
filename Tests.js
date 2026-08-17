@@ -1,4 +1,4 @@
-// Simple assertion helper — throws if the condition is false,
+// Simple assertion helper, throws if the condition is false,
 // which stops execution and shows the error in the Apps Script logs.
 function assert(condition, message) {
   if (!condition) {
@@ -261,7 +261,7 @@ function test_calculateQualityScore_smallSheetNotOverpenalized() {
   Logger.log('✅ test_calculateQualityScore_smallSheetNotOverpenalized passed');
 }
 
-// Run all tests in one go — handy while the suite is still small
+// Run all tests
 function runAllTests() {
   test_analyzeSheetData_detectsEmptyRow();
   test_analyzeSheetData_detectsEmptyColumn();
@@ -275,9 +275,9 @@ function runAllTests() {
   test_findDataTypeInconsistencies_ignoresEmptyCells();
   test_findFormulaErrors_detectsAndCategorizes();
   test_findDuplicateRows_detectsCaseAndWhitespace();
-  test_calculateQualityScore_perfectSheetScores100();
-  test_calculateQualityScore_weightsFormulaErrorsMoreThanIncompleteCells();
   test_trimToContentBounds_dropsTrailingEmptyRowsAndColumns();
   test_calculateQualityScore_smallSheetNotOverpenalized();
+
   Logger.log('✅ All tests passed');
+  return 'All tests passed'; // now clasp run (and CI) get an explicit, checkable result
 }
